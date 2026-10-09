@@ -12,6 +12,10 @@ A static web app: host this folder and open it on a phone. Everyone's maps are a
 
 Build it in the live builder, tap **Save the map**, then on the app's home page tap **Add a saved map file** and pick the file. It is stored on that phone only and works without signal.
 
+## Sponsored card
+
+`sponsor.json` controls one sponsored card on the home page: set `enabled` to true and fill in `title`, `text` and `url` (an affiliate or sponsor link). It is fetched fresh on every online open, so editing the file on the site changes it immediately. If you run it, declare 'Contains ads' in the Play listing.
+
 ## Store listing
 
 https://www.pwabuilder.com packages this hosted app for Google Play and the App Store; `privacy.html` is the privacy policy page the stores ask for.

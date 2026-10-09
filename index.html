@@ -37,13 +37,21 @@ td{padding:7px 6px;border-bottom:1px solid #232a36;vertical-align:top}td a{color
 <div class="empty" id="mmhelp">Build a map in the live builder, tap <b>Save the map</b> there, then add the saved file here. It stays on this phone; nobody else can see it.</div>
 <label class="btn grey" for="addmap">+ Add a saved map file</label><input id="addmap" type="file" accept=".html,text/html" style="display:none">
 <h2>Built in</h2><a class="card" href="./verified.html"><b>69 verified 24/7 and night clinics</b><span>Hand-checked listings (Sept 2026) along Denver metro, I-80/I-69 to Michigan and I-25/US-287/I-45 to Houston. Used by Near me from the first open.</span></a>
-<div class="status" id="st">To keep this on your phone: Safari share button &rarr; <b>Add to Home Screen</b>; Chrome &#8942; &rarr; <b>Add to Home screen</b>. Map tiles need internet the first time; clinic tables, tap-to-call and Near me never do. <a href="./privacy.html">Privacy</a></div>
+<div id="sponsor"></div>
+<button class="btn grey" id="installbtn" style="display:none">&#11015; Install this app on your phone</button>
+<div class="status" id="st">To keep this on your phone: iPhone - Safari share button &rarr; <b>Add to Home Screen</b>; Chrome &#8942; &rarr; <b>Add to Home screen</b>; Samsung Internet &#8801; &rarr; <b>Add page to</b> &rarr; Home screen. Map tiles need internet the first time; clinic tables, tap-to-call and Near me never do. <a href="./privacy.html">Privacy</a></div>
 </main>
 <script>
 function localizeMap(t){return t.replace(/<link rel="stylesheet" href="[^"]*leaflet[^"]*\.css"\/?>/,'<link rel="stylesheet" href="./leaflet.css">').replace(/<script src="[^"]*leaflet[^"]*\.js"><\/script>/,'<script src="./leaflet.js"><\/script><script src="./leaflet-icons.js"><\/script>')}
 function setNet(){document.body.classList.toggle('offline',!navigator.onLine)}
 window.addEventListener('online',setNet);window.addEventListener('offline',setNet);setNet();
 if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js').then(()=>{document.getElementById('st').insertAdjacentHTML('afterbegin','<b>Saved on this phone.</b> ')}).catch(()=>{});}
+let deferredInstall=null;const ib=document.getElementById('installbtn');
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstall=e;ib.style.display='';});
+ib.onclick=async()=>{if(!deferredInstall)return;ib.disabled=true;deferredInstall.prompt();await deferredInstall.userChoice;deferredInstall=null;ib.style.display='none';};
+window.addEventListener('appinstalled',()=>{ib.style.display='none';});
+if(window.matchMedia('(display-mode: standalone)').matches||navigator.standalone){document.getElementById('st').insertAdjacentHTML('afterbegin','<b>Installed.</b> ');}
+fetch('./sponsor.json',{cache:'no-store'}).then(r=>r.json()).then(sp=>{if(sp&&sp.enabled&&sp.url){document.getElementById('sponsor').innerHTML='<a class="card" href="'+sp.url+'" target="_blank" rel="noopener sponsored" style="border-color:#3a4356"><b>'+sp.title+'</b><span>'+(sp.text||'')+'</span><span style="display:block;font-size:11px;margin-top:4px;color:#6f7886">Sponsored</span></a>';}}).catch(()=>{});
 function hav(a,b,c,d){const r=Math.PI/180,R=3958.76;const x=Math.sin((c-a)*r/2)**2+Math.cos(a*r)*Math.cos(c*r)*Math.sin((d-b)*r/2)**2;return 2*R*Math.asin(Math.sqrt(x));}
 const idx=()=>{try{return JSON.parse(localStorage.getItem('mymaps')||'[]')}catch(e){return []}};
 const saveIdx=l=>localStorage.setItem('mymaps',JSON.stringify(l));
