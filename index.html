@@ -1,0 +1,60 @@
+<!DOCTYPE html><html><head><title>Vet locator</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="./manifest.webmanifest"><meta name="theme-color" content="#151a22">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Vet locator">
+<link rel="apple-touch-icon" href="./icon-192.png"><link rel="icon" href="./icon-192.png">
+<style>
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif;background:#0e1116;color:#e8eaee;padding-top:env(safe-area-inset-top)}
+header{padding:14px 16px 10px;background:#151a22;border-bottom:2px solid #2a3140;display:flex;align-items:center;gap:10px}
+header img{width:34px;height:34px;border-radius:8px}
+h1{margin:0;font-size:20px;color:#ffd94d}.sub{color:#9aa3b2;font-size:12.5px;margin-top:2px}
+main{padding:12px 16px 24px;max-width:720px}
+.btn{display:block;text-align:center;background:#ff5252;color:#fff;font-weight:700;font-size:17px;border-radius:14px;padding:16px;margin:10px 0;text-decoration:none;border:0;width:100%;box-sizing:border-box;cursor:pointer}
+.btn.blue{background:#2f6fd6}.btn.grey{background:#1d2430;border:1px solid #3a4356;color:#e8eaee;font-weight:600}
+h2{font-size:14px;color:#9aa3b2;font-weight:600;margin:18px 0 6px;text-transform:none}
+a.card{display:block;background:#1a212c;border:1px solid #2a3140;border-radius:12px;padding:12px 14px;margin:8px 0;color:#e8eaee;text-decoration:none}
+a.card b{display:block;font-size:15px;color:#fff}a.card span{color:#9aa3b2;font-size:12.5px}
+#near{display:none;background:#1a212c;border:1px solid #ffab2e;border-radius:12px;padding:12px 14px;margin:8px 0;font-size:14px;line-height:1.5}
+#near a{color:#8fc1ff;text-decoration:none;font-weight:700}
+.t-ER{color:#ff6b6b;font-weight:700}.t-NIGHT{color:#ffb84d;font-weight:700}
+.status{font-size:12.5px;color:#9aa3b2;padding:10px 0 0;line-height:1.5}.status b{color:#7fe0a0}.status i{color:#ffb84d;font-style:normal}
+.off{display:none;background:#3a2a1a;border:1px solid #ffab2e;color:#ffd9a0;border-radius:10px;padding:10px 12px;font-size:13px;margin:8px 0}
+body.offline .off{display:block}body.offline .btn.blue{opacity:.45;pointer-events:none}
+</style></head><body>
+<header><img src="./icon-192.png" alt=""><div><h1>Vet locator</h1><div class="sub">Every vet door - home, Denver-Flint, Denver-League City</div></div></header>
+<main>
+<div class="off">No signal - the live builder needs internet. Saved maps and Near me still work.</div>
+<button class="btn" id="nearbtn">&#9673; Nearest overnight doors to me now</button>
+<div id="near"></div>
+<a class="btn blue" href="./live.html">Plan a trip or home map (live, needs signal)</a>
+<h2>Saved maps - work without signal</h2>
+<a class="card" href="./vet_corridor_Denver_to_Flint.html"><b>Harley's Corridor - Denver to Flint, every vet door</b><span>385 clinics &middot; 1299 mi driving &middot; ~23.3 h &middot; solid line = route &middot; dashed = variant &middot; map tiles need internet; the table always works</span></a>
+<a class="card" href="./vet_corridor_Denver_to_League_City.html"><b>Harley's Texas Corridor - Denver to League City (Safari / Dr. Garner)</b><span>493 clinics &middot; 1074 mi driving &middot; ~19.4 h &middot; solid line = route &middot; map tiles need internet; the table always works</span></a>
+<a class="card" href="./vet_home_5341_W_82nd_Ave.html"><b>Home vet network - 5341 W 82nd Ave</b><span>100 pins around 5341 W 82nd Ave &middot; dashed rings = 5 and 15 miles &middot; table sorted by distance from home</span></a>
+<div class="status" id="st">To keep this on your phone: Safari share button &rarr; <b>Add to Home Screen</b>; Chrome &#8942; &rarr; <b>Add to Home screen</b>. The saved maps are stored on the phone after the first open. Map tiles only where you have viewed them online; the clinic tables, tap-to-call and Near me never need signal.</div>
+</main>
+<script>
+const MAPS=["vet_corridor_Denver_to_Flint.html", "vet_corridor_Denver_to_League_City.html", "vet_home_5341_W_82nd_Ave.html"];
+function setNet(){document.body.classList.toggle('offline',!navigator.onLine)}
+window.addEventListener('online',setNet);window.addEventListener('offline',setNet);setNet();
+if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js').then(()=>{document.getElementById('st').insertAdjacentHTML('afterbegin','<b>Saved on this phone.</b> ')}).catch(()=>{});}
+function hav(a,b,c,d){const r=Math.PI/180,R=3958.76;const x=Math.sin((c-a)*r/2)**2+Math.cos(a*r)*Math.cos(c*r)*Math.sin((d-b)*r/2)**2;return 2*R*Math.asin(Math.sqrt(x));}
+async function allClinics(){const seen={},out=[];
+ for(const f of MAPS){try{const t=await (await fetch('./'+f)).text();const m=t.match(/const DATA=(\[[\s\S]*?\]); const MAIN=/);if(!m)continue;
+  for(const c of JSON.parse(m[1])){const k=c.name+'|'+c.lat.toFixed(3);if(!seen[k]){seen[k]=1;out.push(c);}}}catch(e){}}
+ return out;}
+document.getElementById('nearbtn').onclick=()=>{
+ const box=document.getElementById('near');box.style.display='block';box.innerHTML='Getting your location...';
+ if(!navigator.geolocation){box.innerHTML='This browser cannot give a location.';return;}
+ navigator.geolocation.getCurrentPosition(async p=>{
+  const la=p.coords.latitude,lo=p.coords.longitude;const all=await allClinics();
+  all.forEach(c=>c.d=hav(la,lo,c.lat,c.lng));
+  const over=all.filter(c=>c.typ==='ER'||c.typ==='NIGHT').sort((a,b)=>a.d-b.d).slice(0,4);
+  const any=all.filter(c=>c.typ!=='ER'&&c.typ!=='NIGHT').sort((a,b)=>a.d-b.d).slice(0,3);
+  const row=c=>'<div><b>'+c.name+'</b> <span class="t-'+c.typ+'">'+c.typ+'</span> &middot; '+c.d.toFixed(1)+' mi straight-line &middot; '+(c.phone?'<a href="tel:'+c.phone+'">'+c.phone+'</a>':'no phone listed')+'<br><span style="color:#9aa3b2;font-size:12.5px">'+c.town+' &middot; '+c.hours+'</span></div>';
+  box.innerHTML=(over.length?'<div style="color:#ffd94d;font-weight:700;margin-bottom:4px">Overnight doors nearest you</div>'+over.map(row).join('<hr style="border:0;border-top:1px solid #2a3140;margin:6px 0">'):'<div>No 24/7 or night clinic in the saved maps near here.</div>')
+   +(any.length?'<div style="color:#ffd94d;font-weight:700;margin:10px 0 4px">Nearest daytime clinics</div>'+any.map(row).join('<hr style="border:0;border-top:1px solid #2a3140;margin:6px 0">'):'')
+   +'<div style="color:#9aa3b2;font-size:12px;margin-top:8px">From the '+all.length+' clinics in your saved maps. Call before driving - hours change.</div>';
+ },()=>{box.innerHTML='Location unavailable - allow location access for this app and try again.'},{enableHighAccuracy:true,timeout:15000,maximumAge:60000});
+};
+</script></body></html>
