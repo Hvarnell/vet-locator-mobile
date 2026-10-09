@@ -1,14 +1,17 @@
 # Vet locator - phone app
 
-A static web app: host this folder and open it on a phone.
+A static web app: host this folder and open it on a phone. Everyone's maps are added on their own phone and stay there.
 
 ## Put it online with GitHub Pages (free)
 
-1. Create a **public** repository on GitHub (Pages is free only for public repos) and upload everything in this folder, including the `leaflet` sub-folder, with **Add file -> Upload files**.
+1. Create a **public** repository on GitHub and upload every file in this folder (loose files, no sub-folders) with **Add file -> Upload files**. `.nojekyll` is a hidden file; if the upload box skips it, create it with Add file -> Create new file (empty).
 2. Repository **Settings -> Pages -> Build and deployment -> Source: Deploy from a branch**, branch `main`, folder `/ (root)`, **Save**.
-3. After a minute the same page shows the address, e.g. `https://<user>.github.io/<repo>/`. Open it on the phone.
-4. Add it to the home screen (Safari: share -> Add to Home Screen; Chrome: menu -> Add to Home screen). From then on it opens like an app; the saved maps and Near me work without signal, the live builder when there is one.
+3. After a minute the same page shows the address, e.g. `https://<user>.github.io/<repo>/`. Open it on the phone and add it to the home screen.
 
-To update: rebuild in the notebook, upload the new files over the old ones. Phones pick up the new version on their next online open.
+## Adding a map on a phone
 
-App-store version: https://www.pwabuilder.com packages a hosted app like this one into Android and iOS store submissions.
+Build it in the live builder, tap **Save the map**, then on the app's home page tap **Add a saved map file** and pick the file. It is stored on that phone only and works without signal.
+
+## Store listing
+
+https://www.pwabuilder.com packages this hosted app for Google Play and the App Store; `privacy.html` is the privacy policy page the stores ask for.

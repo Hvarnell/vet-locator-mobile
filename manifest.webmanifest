@@ -1,22 +1,38 @@
 {
+ "id": "./",
  "name": "Vet locator",
  "short_name": "Vet locator",
+ "description": "Find the nearest open veterinary door on any US drive - 24/7 ERs, night clinics and daytime GPs with phone and hours, offline.",
  "start_url": "./index.html",
  "scope": "./",
  "display": "standalone",
+ "orientation": "portrait",
+ "lang": "en-US",
  "background_color": "#0e1116",
  "theme_color": "#151a22",
+ "categories": [
+  "medical",
+  "navigation",
+  "travel"
+ ],
  "icons": [
   {
    "src": "./icon-192.png",
    "sizes": "192x192",
-   "type": "image/png"
+   "type": "image/png",
+   "purpose": "any"
   },
   {
    "src": "./icon-512.png",
    "sizes": "512x512",
    "type": "image/png",
-   "purpose": "any maskable"
+   "purpose": "any"
+  },
+  {
+   "src": "./icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
   }
  ]
 }
