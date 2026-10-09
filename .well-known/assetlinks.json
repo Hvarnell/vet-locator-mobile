@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "io.github.hvarnell.twa",
+        "sha256_cert_fingerprints": ["B8:19:15:CB:28:F5:3B:03:38:F2:E5:08:37:69:F1:A7:BB:3C:90:08:68:44:0A:9B:75:B6:C3:28:A2:40:49:4B"]
+      }
+    }]
