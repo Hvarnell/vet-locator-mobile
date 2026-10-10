@@ -1,7 +1,7 @@
-<!DOCTYPE html><html lang="en"><head><title>Vet locator</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!DOCTYPE html><html lang="en"><head><title>VetAlong</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="manifest" href="./manifest.webmanifest"><meta name="theme-color" content="#151a22">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Vet locator">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="VetAlong">
 <link rel="apple-touch-icon" href="./icon-192.png"><link rel="icon" href="./icon-192.png">
 <style>
 body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif;background:#0e1116;color:#e8eaee;padding-top:env(safe-area-inset-top)}
@@ -26,7 +26,7 @@ body.offline .off{display:block}body.offline .btn.blue{opacity:.45;pointer-event
 table{width:100%;border-collapse:collapse;font-size:13px}th{text-align:left;color:#ffd94d;padding:8px 6px;border-bottom:2px solid #2a3140;position:sticky;top:0;background:#1a212c}
 td{padding:7px 6px;border-bottom:1px solid #232a36;vertical-align:top}td a{color:#8fc1ff;text-decoration:none}
 </style></head><body>
-<header><img src="./icon-192.png" alt=""><div><h1>Vet locator</h1><div class="sub">Every vet door on the road: 24/7 ERs, night clinics and daytime GPs with phone and hours</div></div></header>
+<header><img src="./icon-192.png" alt=""><div><h1>VetAlong</h1><div class="sub">Every vet door on the road: 24/7 ERs, night clinics and daytime GPs with phone and hours</div></div></header>
 <main>
 <div class="off">No signal - the live builder needs internet. Your saved maps, the verified list and Near me still work.</div>
 <button class="btn" id="nearbtn">&#9673; Nearest overnight doors to me now</button>
@@ -39,7 +39,7 @@ td{padding:7px 6px;border-bottom:1px solid #232a36;vertical-align:top}td a{color
 <h2>Built in</h2><a class="card" href="./verified.html"><b>69 verified 24/7 and night clinics</b><span>Hand-checked listings (Sept 2026) along Denver metro, I-80/I-69 to Michigan and I-25/US-287/I-45 to Houston. Used by Near me from the first open.</span></a>
 <div id="sponsor"></div>
 <button class="btn grey" id="installbtn" style="display:none">&#11015; Install this app on your phone</button>
-<div class="status" id="st">To keep this on your phone: iPhone - Safari share button &rarr; <b>Add to Home Screen</b>; Chrome &#8942; &rarr; <b>Add to Home screen</b>; Samsung Internet &#8801; &rarr; <b>Add page to</b> &rarr; Home screen. Map tiles need internet the first time; clinic tables, tap-to-call and Near me never do. <a href="./privacy.html">Privacy</a></div>
+<div class="status" id="st"><a href="./install.html" id="howto"><b style="color:#8fc1ff">Put it on your home screen</b></a> so it opens like an app and works without signal. Map tiles need internet the first time; clinic tables, tap-to-call and Near me never do. <a href="./privacy.html">Privacy</a></div>
 </main>
 <script>
 function localizeMap(t){return t.replace(/<link rel="stylesheet" href="[^"]*leaflet[^"]*\.css"\/?>/,'<link rel="stylesheet" href="./leaflet.css">').replace(/<script src="[^"]*leaflet[^"]*\.js"><\/script>/,'<script src="./leaflet.js"><\/script><script src="./leaflet-icons.js"><\/script>')}
@@ -50,7 +50,7 @@ let deferredInstall=null;const ib=document.getElementById('installbtn');
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstall=e;ib.style.display='';});
 ib.onclick=async()=>{if(!deferredInstall)return;ib.disabled=true;deferredInstall.prompt();await deferredInstall.userChoice;deferredInstall=null;ib.style.display='none';};
 window.addEventListener('appinstalled',()=>{ib.style.display='none';});
-if(window.matchMedia('(display-mode: standalone)').matches||navigator.standalone){document.getElementById('st').insertAdjacentHTML('afterbegin','<b>Installed.</b> ');}
+if(window.matchMedia('(display-mode: standalone)').matches||navigator.standalone){document.getElementById('st').insertAdjacentHTML('afterbegin','<b>Installed.</b> ');document.getElementById('howto').style.display='none';}
 fetch('./sponsor.json',{cache:'no-store'}).then(r=>r.json()).then(sp=>{if(sp&&sp.enabled&&sp.url){document.getElementById('sponsor').innerHTML='<a class="card" href="'+sp.url+'" target="_blank" rel="noopener sponsored" style="border-color:#3a4356"><b>'+sp.title+'</b><span>'+(sp.text||'')+'</span><span style="display:block;font-size:11px;margin-top:4px;color:#6f7886">Sponsored</span></a>';}}).catch(()=>{});
 function hav(a,b,c,d){const r=Math.PI/180,R=3958.76;const x=Math.sin((c-a)*r/2)**2+Math.cos(a*r)*Math.cos(c*r)*Math.sin((d-b)*r/2)**2;return 2*R*Math.asin(Math.sqrt(x));}
 const idx=()=>{try{return JSON.parse(localStorage.getItem('mymaps')||'[]')}catch(e){return []}};
@@ -59,7 +59,7 @@ function renderMine(){const l=idx(),box=document.getElementById('mymaps');box.in
  document.getElementById('mmhelp').style.display=l.length?'none':'';
  box.querySelectorAll('.rm').forEach(b=>b.onclick=async e=>{e.preventDefault();const id=b.dataset.id;const c=await caches.open('mymaps');await c.delete('./map-'+id+'.html');saveIdx(idx().filter(m=>m.id!==id));renderMine();});}
 document.getElementById('addmap').onchange=async e=>{const f=e.target.files[0];if(!f)return;let t=await f.text();
- if(t.indexOf('const DATA=')<0){alert('That is not a map saved from the vet locator builder.');return;}
+ if(t.indexOf('const DATA=')<0){alert('That is not a map saved from the map builder.');return;}
  t=localizeMap(t);const id=(Date.now().toString(36)+Math.random().toString(36).slice(2,7));
  const c=await caches.open('mymaps');await c.put(new Request('./map-'+id+'.html'),new Response(t,{headers:{'Content-Type':'text/html; charset=utf-8'}}));
  const ti=(t.match(/<title>(.*?)<\/title>/)||[])[1]||f.name,su=(t.match(/<div class="sub">(.*?)<\/div>/)||[])[1]||'';

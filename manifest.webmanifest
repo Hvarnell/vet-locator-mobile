@@ -1,7 +1,7 @@
 {
  "id": "./",
- "name": "Vet locator",
- "short_name": "Vet locator",
+ "name": "VetAlong",
+ "short_name": "VetAlong",
  "description": "Find the nearest open veterinary door on any US drive - 24/7 ERs, night clinics and daytime GPs with phone and hours, offline.",
  "start_url": "./index.html",
  "scope": "./",
