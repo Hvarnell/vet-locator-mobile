@@ -1,4 +1,4 @@
-# VetAlong - phone app
+# MapAVet - phone app
 
 A static web app: host this folder and open it on a phone. Everyone's maps are added on their own phone and stay there.
 
@@ -12,9 +12,13 @@ A static web app: host this folder and open it on a phone. Everyone's maps are a
 
 `.../install.html` - it explains that this is a web app, detects the phone (and the Instagram/Facebook in-app browser, which cannot install apps), offers a one-tap Install button where the browser supports it, and shows illustrated Add-to-Home-Screen steps for Safari, Chrome and Samsung Internet. On a computer it shows a QR code. Pass `site_url` to `build_pwa` so the QR code and link preview point at the right address.
 
-## Adding a map on a phone
+## Clinics near me
 
-Build it in the live builder, tap **Save the map**, then on the app's home page tap **Add a saved map file** and pick the file. It is stored on that phone only and works without signal.
+One button, three choices: 24/7 ER (default), late night, or any clinic open right now (from each clinic's hours and the phone's clock). Every result has the address, tap-to-call and a Directions button that opens the phone's own maps app. It uses the built-in hand-verified list plus every map saved on the phone, and works without signal.
+
+## Saving a map
+
+Open the builder from inside the app, build the map and tap **Save to this phone** - it appears under My maps. **Add a map file** on the home page is for a map built on a computer or sent by someone else. Maps stay on that phone only.
 
 ## Sponsored card
 

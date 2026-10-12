@@ -1,7 +1,7 @@
-<!DOCTYPE html><html lang="en"><head><title>VetAlong - privacy</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!DOCTYPE html><html lang="en"><head><title>MapAVet - privacy</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="manifest" href="./manifest.webmanifest"><meta name="theme-color" content="#151a22">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="VetAlong">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="MapAVet">
 <link rel="apple-touch-icon" href="./icon-192.png"><link rel="icon" href="./icon-192.png">
 <style>
 body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif;background:#0e1116;color:#e8eaee;padding-top:env(safe-area-inset-top)}
@@ -15,8 +15,7 @@ h2{font-size:14px;color:#9aa3b2;font-weight:600;margin:18px 0 6px}
 .card{display:block;background:#1a212c;border:1px solid #2a3140;border-radius:12px;padding:12px 14px;margin:8px 0;color:#e8eaee;text-decoration:none;position:relative}
 .card b{display:block;font-size:15px;color:#fff;padding-right:60px}.card span{color:#9aa3b2;font-size:12.5px}
 .card .rm{position:absolute;right:12px;top:12px;color:#9aa3b2;font-size:12px;background:none;border:1px solid #3a4356;border-radius:8px;padding:4px 8px;cursor:pointer}
-#near{display:none;background:#1a212c;border:1px solid #ffab2e;border-radius:12px;padding:12px 14px;margin:8px 0;font-size:14px;line-height:1.5}
-#near a{color:#8fc1ff;text-decoration:none;font-weight:700}
+#near{margin:4px 0}
 .t-ER{color:#ff6b6b;font-weight:700}.t-NIGHT{color:#ffb84d;font-weight:700}
 .status{font-size:12.5px;color:#9aa3b2;padding:10px 0 0;line-height:1.5}.status b{color:#7fe0a0}.status i{color:#ffb84d;font-style:normal}
 .status a,.sub a{color:#8fc1ff;text-decoration:none}
@@ -25,11 +24,22 @@ body.offline .off{display:block}body.offline .btn.blue{opacity:.45;pointer-event
 .empty{color:#9aa3b2;font-size:13px;line-height:1.5;padding:4px 0}
 table{width:100%;border-collapse:collapse;font-size:13px}th{text-align:left;color:#ffd94d;padding:8px 6px;border-bottom:2px solid #2a3140;position:sticky;top:0;background:#1a212c}
 td{padding:7px 6px;border-bottom:1px solid #232a36;vertical-align:top}td a{color:#8fc1ff;text-decoration:none}
+.seg{display:flex;gap:6px;margin:6px 0 8px}.seg button{flex:1;background:#1a212c;border:1px solid #3a4356;color:#c9ceda;border-radius:10px;padding:9px 4px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+.seg button.on{background:#2f6fd6;border-color:#2f6fd6;color:#fff}
+.res{background:#1a212c;border:1px solid #2a3140;border-radius:12px;padding:10px 12px;margin:8px 0;font-size:13.5px;line-height:1.45}
+.res b{color:#fff;font-size:15px}.res .d{color:#ffd94d;font-weight:700;white-space:nowrap}.res .addr{color:#c9ceda}.res .hrs{color:#9aa3b2;font-size:12.5px}
+.acts{display:flex;gap:8px;margin-top:8px}.act{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;background:#242c3a;border:1px solid #3a4356;color:#fff;border-radius:10px;padding:9px 6px;text-decoration:none;font-weight:700;font-size:13.5px}
+.act.go{background:#2f6fd6;border-color:#2f6fd6}.act.call{background:#1f7a4d;border-color:#1f7a4d}.act svg{width:16px;height:16px;flex:0 0 auto}
+.badge{display:inline-block;font-size:11px;font-weight:700;border-radius:6px;padding:1px 6px;margin-left:6px;vertical-align:middle;background:#2a3140;color:#c9ceda}.badge.ER{background:#5a2222;color:#ff8a8a}.badge.NIGHT{background:#5a3f14;color:#ffc46b}.badge.EXT{background:#5a5214;color:#ffe97a}.badge.DAY{background:#1b3a5a;color:#8fc1ff}
+#nearmap{display:none;height:240px;border-radius:12px;margin:8px 0;border:1px solid #2a3140;background:#1a212c}
+.small{font-size:13px;padding:10px}.note{color:#9aa3b2;font-size:12.5px;line-height:1.5}
+.toast{position:fixed;left:16px;right:16px;bottom:20px;background:#1b3324;border:1px solid #3fbf74;color:#b9f0cf;border-radius:12px;padding:12px 14px;font-size:14px;z-index:9999}.toast a{color:#fff;font-weight:700}
+td .go{display:inline-block;background:#2f6fd6;color:#fff;border-radius:7px;padding:3px 7px;font-size:12px;text-decoration:none}
 </style></head>
 <body><header><div><h1>Privacy</h1><div class="sub"><a href="./index.html">&larr; back</a></div></div></header>
 <main style="font-size:14px;line-height:1.6">
-<p><b>VetAlong</b> does not collect, store or transmit personal information, and has no accounts.</p>
-<p><b>Location.</b> When you tap "Nearest overnight doors to me now" or "Near me", the app asks the phone for its position and uses it on the phone to sort clinics by distance. The position is not sent anywhere and is not kept.</p>
+<p><b>MapAVet</b> does not collect, store or transmit personal information, and has no accounts.</p>
+<p><b>Location.</b> When you tap "Find clinics near me" or "Near me", the app asks the phone for its position and uses it on the phone to sort clinics by distance. The position is not sent anywhere and is not kept. Tapping "Directions" opens your phone's own maps app with the clinic's location.</p>
 <p><b>Saved maps.</b> Maps you add are stored in this app's own storage on your phone. They are not uploaded. Removing the app removes them.</p>
 <p><b>Third-party services.</b> Map background tiles are requested from Esri and the U.S. Geological Survey when you look at a map with internet access; those requests carry the map area being viewed. The live builder (vetlocator.streamlit.app) is a separate web page: addresses you type there are sent to routing and geocoding services (OSRM, U.S. Census Bureau, ArcGIS, Photon, OpenStreetMap) and, when configured, Google Places, to produce the map. It stores nothing about you beyond temporary caching needed to build the map.</p>
 <p><b>Clinic information</b> comes from public listings and is provided as a convenience; always call ahead. Nothing here is veterinary advice.</p>

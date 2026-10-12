@@ -1,8 +1,8 @@
 {
  "id": "./",
- "name": "VetAlong",
- "short_name": "VetAlong",
- "description": "Find the nearest open veterinary door on any US drive - 24/7 ERs, night clinics and daytime GPs with phone and hours, offline.",
+ "name": "MapAVet",
+ "short_name": "MapAVet",
+ "description": "The nearest open veterinary clinic, wherever you are - 24/7 ERs, night clinics and daytime practices with address, hours, phone and directions, offline.",
  "start_url": "./index.html",
  "scope": "./",
  "display": "standalone",
@@ -29,7 +29,7 @@
    "purpose": "any"
   },
   {
-   "src": "./icon-512.png",
+   "src": "./icon-512-maskable.png",
    "sizes": "512x512",
    "type": "image/png",
    "purpose": "maskable"

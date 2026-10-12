@@ -1,7 +1,7 @@
-<!DOCTYPE html><html lang="en"><head><title>VetAlong</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!DOCTYPE html><html lang="en"><head><title>MapAVet</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="manifest" href="./manifest.webmanifest"><meta name="theme-color" content="#151a22">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="VetAlong">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="MapAVet">
 <link rel="apple-touch-icon" href="./icon-192.png"><link rel="icon" href="./icon-192.png">
 <style>
 body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif;background:#0e1116;color:#e8eaee;padding-top:env(safe-area-inset-top)}
@@ -15,8 +15,7 @@ h2{font-size:14px;color:#9aa3b2;font-weight:600;margin:18px 0 6px}
 .card{display:block;background:#1a212c;border:1px solid #2a3140;border-radius:12px;padding:12px 14px;margin:8px 0;color:#e8eaee;text-decoration:none;position:relative}
 .card b{display:block;font-size:15px;color:#fff;padding-right:60px}.card span{color:#9aa3b2;font-size:12.5px}
 .card .rm{position:absolute;right:12px;top:12px;color:#9aa3b2;font-size:12px;background:none;border:1px solid #3a4356;border-radius:8px;padding:4px 8px;cursor:pointer}
-#near{display:none;background:#1a212c;border:1px solid #ffab2e;border-radius:12px;padding:12px 14px;margin:8px 0;font-size:14px;line-height:1.5}
-#near a{color:#8fc1ff;text-decoration:none;font-weight:700}
+#near{margin:4px 0}
 .t-ER{color:#ff6b6b;font-weight:700}.t-NIGHT{color:#ffb84d;font-weight:700}
 .status{font-size:12.5px;color:#9aa3b2;padding:10px 0 0;line-height:1.5}.status b{color:#7fe0a0}.status i{color:#ffb84d;font-style:normal}
 .status a,.sub a{color:#8fc1ff;text-decoration:none}
@@ -25,24 +24,38 @@ body.offline .off{display:block}body.offline .btn.blue{opacity:.45;pointer-event
 .empty{color:#9aa3b2;font-size:13px;line-height:1.5;padding:4px 0}
 table{width:100%;border-collapse:collapse;font-size:13px}th{text-align:left;color:#ffd94d;padding:8px 6px;border-bottom:2px solid #2a3140;position:sticky;top:0;background:#1a212c}
 td{padding:7px 6px;border-bottom:1px solid #232a36;vertical-align:top}td a{color:#8fc1ff;text-decoration:none}
-</style></head><body>
-<header><img src="./icon-192.png" alt=""><div><h1>VetAlong</h1><div class="sub">Every vet door on the road: 24/7 ERs, night clinics and daytime GPs with phone and hours</div></div></header>
+.seg{display:flex;gap:6px;margin:6px 0 8px}.seg button{flex:1;background:#1a212c;border:1px solid #3a4356;color:#c9ceda;border-radius:10px;padding:9px 4px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+.seg button.on{background:#2f6fd6;border-color:#2f6fd6;color:#fff}
+.res{background:#1a212c;border:1px solid #2a3140;border-radius:12px;padding:10px 12px;margin:8px 0;font-size:13.5px;line-height:1.45}
+.res b{color:#fff;font-size:15px}.res .d{color:#ffd94d;font-weight:700;white-space:nowrap}.res .addr{color:#c9ceda}.res .hrs{color:#9aa3b2;font-size:12.5px}
+.acts{display:flex;gap:8px;margin-top:8px}.act{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;background:#242c3a;border:1px solid #3a4356;color:#fff;border-radius:10px;padding:9px 6px;text-decoration:none;font-weight:700;font-size:13.5px}
+.act.go{background:#2f6fd6;border-color:#2f6fd6}.act.call{background:#1f7a4d;border-color:#1f7a4d}.act svg{width:16px;height:16px;flex:0 0 auto}
+.badge{display:inline-block;font-size:11px;font-weight:700;border-radius:6px;padding:1px 6px;margin-left:6px;vertical-align:middle;background:#2a3140;color:#c9ceda}.badge.ER{background:#5a2222;color:#ff8a8a}.badge.NIGHT{background:#5a3f14;color:#ffc46b}.badge.EXT{background:#5a5214;color:#ffe97a}.badge.DAY{background:#1b3a5a;color:#8fc1ff}
+#nearmap{display:none;height:240px;border-radius:12px;margin:8px 0;border:1px solid #2a3140;background:#1a212c}
+.small{font-size:13px;padding:10px}.note{color:#9aa3b2;font-size:12.5px;line-height:1.5}
+.toast{position:fixed;left:16px;right:16px;bottom:20px;background:#1b3324;border:1px solid #3fbf74;color:#b9f0cf;border-radius:12px;padding:12px 14px;font-size:14px;z-index:9999}.toast a{color:#fff;font-weight:700}
+td .go{display:inline-block;background:#2f6fd6;color:#fff;border-radius:7px;padding:3px 7px;font-size:12px;text-decoration:none}
+</style><link rel="stylesheet" href="./leaflet.css"></head><body>
+<header><img src="./icon-192.png" alt=""><div><h1>MapAVet</h1><div class="sub">Never far from an open door.</div></div></header>
 <main>
-<div class="off">No signal - the live builder needs internet. Your saved maps, the verified list and Near me still work.</div>
-<button class="btn" id="nearbtn">&#9673; Nearest overnight doors to me now</button>
+<div class="off">No signal - building a new map needs internet. Clinics near me, the built-in list and your saved maps still work.</div>
+<h2>Veterinary clinics near me</h2>
+<div class="seg" id="mode"><button data-m="er" class="on">24/7 ER</button><button data-m="late">Late night</button><button data-m="open">Open now</button></div>
+<button class="btn" id="nearbtn">&#9673; Find clinics near me</button>
 <div id="near"></div>
-<a class="btn blue" href="./live.html">Plan a trip or home map (live, needs signal)</a>
-<h2>My maps - saved on this phone only</h2>
-<div id="mymaps"></div>
-<div class="empty" id="mmhelp">Build a map in the live builder, tap <b>Save the map</b> there, then add the saved file here. It stays on this phone; nobody else can see it.</div>
-<label class="btn grey" for="addmap">+ Add a saved map file</label><input id="addmap" type="file" accept=".html,text/html" style="display:none">
-<h2>Built in</h2><a class="card" href="./verified.html"><b>69 verified 24/7 and night clinics</b><span>Hand-checked listings (Sept 2026) along Denver metro, I-80/I-69 to Michigan and I-25/US-287/I-45 to Houston. Used by Near me from the first open.</span></a>
+<div id="nearmap"></div>
+<h2>Any other area</h2><a class="btn blue" href="./live.html">Build a map of a route or an address</a><div class="note" style="margin-top:-4px">Every clinic along any US drive or around any address, with hours and phone. Needs signal to build; the finished map saves to this phone.</div>
+<h2>Built in</h2><a class="card" href="./verified.html"><b>231 hand-verified clinics</b><span>69 open 24/7 or late. Checked against their listings (Sept 2026): Denver metro, Denver to Michigan (I-80 / I-69) and Denver to Houston (I-25 / US-287 / I-45). Build a map to add any other area.</span></a>
 <div id="sponsor"></div>
+<div id="mmsec" style="display:none"><h2>My maps</h2><div id="mymaps"></div></div>
+<div class="status" id="st">Works without signal: clinics near me, the built-in list and your saved maps. Needs signal: building a new map, directions, and map pictures the first time you look at an area. <a href="./install.html" id="howto">Put it on your home screen</a> &middot; <a href="./privacy.html">Privacy</a></div>
 <button class="btn grey" id="installbtn" style="display:none">&#11015; Install this app on your phone</button>
-<div class="status" id="st"><a href="./install.html" id="howto"><b style="color:#8fc1ff">Put it on your home screen</b></a> so it opens like an app and works without signal. Map tiles need internet the first time; clinic tables, tap-to-call and Near me never do. <a href="./privacy.html">Privacy</a></div>
+<h2>Add a map file</h2>
+<label class="btn grey small" for="addmap">+ Add a map file</label><input id="addmap" type="file" accept=".html,text/html" style="display:none">
+<div class="note">Maps you build inside this app save to it with one tap. This is for a map file someone sent you or one you built on a computer. Maps stay on this phone only; nobody else can see them.</div>
 </main>
+<script src="./leaflet.js"></script><script src="./leaflet-icons.js"></script><script>const APP_ORIGIN="https://vetlocator.streamlit.app";</script><script src="./mymaps.js"></script>
 <script>
-function localizeMap(t){return t.replace(/<link rel="stylesheet" href="[^"]*leaflet[^"]*\.css"\/?>/,'<link rel="stylesheet" href="./leaflet.css">').replace(/<script src="[^"]*leaflet[^"]*\.js"><\/script>/,'<script src="./leaflet.js"><\/script><script src="./leaflet-icons.js"><\/script>')}
 function setNet(){document.body.classList.toggle('offline',!navigator.onLine)}
 window.addEventListener('online',setNet);window.addEventListener('offline',setNet);setNet();
 if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js').then(()=>{document.getElementById('st').insertAdjacentHTML('afterbegin','<b>Saved on this phone.</b> ')}).catch(()=>{});}
@@ -50,38 +63,47 @@ let deferredInstall=null;const ib=document.getElementById('installbtn');
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstall=e;ib.style.display='';});
 ib.onclick=async()=>{if(!deferredInstall)return;ib.disabled=true;deferredInstall.prompt();await deferredInstall.userChoice;deferredInstall=null;ib.style.display='none';};
 window.addEventListener('appinstalled',()=>{ib.style.display='none';});
-if(window.matchMedia('(display-mode: standalone)').matches||navigator.standalone){document.getElementById('st').insertAdjacentHTML('afterbegin','<b>Installed.</b> ');document.getElementById('howto').style.display='none';}
+if(window.matchMedia('(display-mode: standalone)').matches||navigator.standalone){document.getElementById('howto').style.display='none';}
 fetch('./sponsor.json',{cache:'no-store'}).then(r=>r.json()).then(sp=>{if(sp&&sp.enabled&&sp.url){document.getElementById('sponsor').innerHTML='<a class="card" href="'+sp.url+'" target="_blank" rel="noopener sponsored" style="border-color:#3a4356"><b>'+sp.title+'</b><span>'+(sp.text||'')+'</span><span style="display:block;font-size:11px;margin-top:4px;color:#6f7886">Sponsored</span></a>';}}).catch(()=>{});
 function hav(a,b,c,d){const r=Math.PI/180,R=3958.76;const x=Math.sin((c-a)*r/2)**2+Math.cos(a*r)*Math.cos(c*r)*Math.sin((d-b)*r/2)**2;return 2*R*Math.asin(Math.sqrt(x));}
-const idx=()=>{try{return JSON.parse(localStorage.getItem('mymaps')||'[]')}catch(e){return []}};
-const saveIdx=l=>localStorage.setItem('mymaps',JSON.stringify(l));
-function renderMine(){const l=idx(),box=document.getElementById('mymaps');box.innerHTML=l.map(m=>'<a class="card" href="./map-'+m.id+'.html"><b>'+m.title+'</b><span>'+m.sub+'</span><button class="rm" data-id="'+m.id+'">remove</button></a>').join('');
- document.getElementById('mmhelp').style.display=l.length?'none':'';
- box.querySelectorAll('.rm').forEach(b=>b.onclick=async e=>{e.preventDefault();const id=b.dataset.id;const c=await caches.open('mymaps');await c.delete('./map-'+id+'.html');saveIdx(idx().filter(m=>m.id!==id));renderMine();});}
-document.getElementById('addmap').onchange=async e=>{const f=e.target.files[0];if(!f)return;let t=await f.text();
- if(t.indexOf('const DATA=')<0){alert('That is not a map saved from the map builder.');return;}
- t=localizeMap(t);const id=(Date.now().toString(36)+Math.random().toString(36).slice(2,7));
- const c=await caches.open('mymaps');await c.put(new Request('./map-'+id+'.html'),new Response(t,{headers:{'Content-Type':'text/html; charset=utf-8'}}));
- const ti=(t.match(/<title>(.*?)<\/title>/)||[])[1]||f.name,su=(t.match(/<div class="sub">(.*?)<\/div>/)||[])[1]||'';
- const l=idx();l.push({id,title:ti,sub:su.replace(/<[^>]+>/g,'').slice(0,120)});saveIdx(l);renderMine();e.target.value='';};
-renderMine();
+function renderMine(){const l=mmIdx(),box=document.getElementById('mymaps');box.innerHTML=l.map(m=>'<a class="card" href="./map-'+m.id+'.html"><b>'+m.title+'</b><span>'+m.sub+'</span><button class="rm" data-id="'+m.id+'">remove</button></a>').join('');
+ document.getElementById('mmsec').style.display=l.length?'':'none';
+ box.querySelectorAll('.rm').forEach(b=>b.onclick=async e=>{e.preventDefault();await removeMap(b.dataset.id);renderMine();});}
+document.getElementById('addmap').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{await saveMapHtml(await f.text(),f.name);renderMine();window.scrollTo({top:document.getElementById('mmsec').offsetTop-10,behavior:'smooth'});}catch(err){alert('That is not a map saved from the map builder.');}e.target.value='';};
+renderMine();listenForMaps(()=>renderMine());
 async function allClinics(){const seen={},out=[];const add=c=>{const k=c.name+'|'+(+c.lat).toFixed(3);if(!seen[k]){seen[k]=1;out.push(c);}};
  try{const b=await (await fetch('./builtin.json')).json();b.forEach(c=>{c.source='verified';add(c)});}catch(e){}
- try{const c=await caches.open('mymaps');for(const m of idx()){const r=await c.match('./map-'+m.id+'.html');if(!r)continue;const t=await r.text();const mm=t.match(/const DATA=(\[[\s\S]*?\]); const MAIN=/);if(mm)JSON.parse(mm[1]).forEach(add);}}catch(e){}
+ try{const c=await caches.open('mymaps');for(const m of mmIdx()){const r=await c.match('./map-'+m.id+'.html');if(!r)continue;const t=await r.text();const mm=t.match(/const DATA=(\[[\s\S]*?\]); const MAIN=/);if(mm)JSON.parse(mm[1]).forEach(add);}}catch(e){}
  return out;}
+function openNow(c,now){if(c.typ==='ER')return true;const s=c.sched;if(!s)return null;const d=(now.getDay()+6)%7,m=now.getHours()*60+now.getMinutes();
+ for(const iv of (s[d]||[]))if(iv[0]<=m&&m<iv[1])return true;for(const iv of (s[(d+6)%7]||[]))if(iv[1]>1440&&m<iv[1]-1440)return true;return false;}
+const IOS=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+function dirUrl(c){return IOS?'https://maps.apple.com/?daddr='+c.lat+','+c.lng+'&q='+encodeURIComponent(c.name):'https://www.google.com/maps/dir/?api=1&destination='+c.lat+','+c.lng;}
+const ICO_GO='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 3 3 10.5l8 2.5 2.5 8L21 3z"/></svg>',ICO_CALL='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.6 10.8a15 15 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25c1.1.37 2.3.57 3.6.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.6a1 1 0 0 1-.25 1L6.6 10.8z"/></svg>';
+let mode='er',nearMap=null,nearLayer=null,lastPos=null;
+document.querySelectorAll('#mode button').forEach(b=>b.onclick=()=>{mode=b.dataset.m;document.querySelectorAll('#mode button').forEach(x=>x.classList.toggle('on',x===b));if(lastPos)showNear(lastPos);});
+function row(c){const typ=c.typ||'UNK';const badge={ER:'24/7 ER',NIGHT:'late night',EXT:'extended hrs',DAY:'daytime',UNK:'hours unknown'}[typ]||typ;
+ return '<div class="res"><div style="display:flex;justify-content:space-between;gap:10px"><div><b>'+c.name+'</b><span class="badge '+typ+'">'+badge+'</span></div><span class="d">'+c.d.toFixed(1)+' mi</span></div>'
+ +'<div class="addr">'+(c.address||c.town||'')+'</div><div class="hrs">'+(c.hours||'')+'</div>'
+ +'<div class="acts">'+(c.phone?'<a class="act call" href="tel:'+c.phone+'">'+ICO_CALL+' Call</a>':'<span class="act" style="opacity:.5">no phone listed</span>')+'<a class="act go" target="_blank" rel="noopener" href="'+dirUrl(c)+'">'+ICO_GO+' Directions</a></div></div>';}
+async function showNear(p){lastPos=p;const la=p.coords.latitude,lo=p.coords.longitude;const all=await allClinics();const now=new Date();
+ all.forEach(c=>{c.d=hav(la,lo,c.lat,c.lng)});
+ let pick=mode==='er'?all.filter(c=>c.typ==='ER'):mode==='late'?all.filter(c=>c.typ==='ER'||c.typ==='NIGHT'):all.filter(c=>openNow(c,now)===true);
+ pick.sort((a,b)=>a.d-b.d);const top=pick.slice(0,6);const box=document.getElementById('near');
+ const label={er:'24/7 emergency hospitals',late:'24/7 and late-night clinics',open:'clinics open right now'}[mode];
+ box.innerHTML=(top.length?'<div style="color:#ffd94d;font-weight:700;margin:6px 0 2px">Nearest '+label+'</div>'+top.map(row).join(''):'<div class="res">No '+label+' in the built-in list or your saved maps near here. Try another option above, or build a map of your area.</div>')
+  +'<div class="note" style="margin-top:6px">Straight-line miles. '+(mode==='open'?'Clinics whose hours are not listed are left out of Open now. ':'')+'Always call before driving - hours change.</div>';
+ try{const mapEl=document.getElementById('nearmap');mapEl.style.display='block';
+  if(!nearMap){nearMap=L.map('nearmap',{zoomControl:false,attributionControl:false});L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',{maxZoom:19}).addTo(nearMap);}
+  if(nearLayer)nearLayer.remove();nearLayer=L.layerGroup().addTo(nearMap);const col={ER:'#ff5252',NIGHT:'#ffab2e',EXT:'#ffe14d',DAY:'#4d9bff',UNK:'#9aa3b2'};
+  L.circleMarker([la,lo],{radius:7,color:'#fff',fillColor:'#2f6fd6',fillOpacity:1,weight:2}).addTo(nearLayer).bindPopup('You are here');
+  top.forEach(c=>L.circleMarker([c.lat,c.lng],{radius:8,color:'#fff',weight:1.5,fillColor:col[c.typ]||col.UNK,fillOpacity:1}).addTo(nearLayer).bindPopup('<b>'+c.name+'</b><br>'+(c.address||c.town||'')+'<br>'+c.d.toFixed(1)+' mi &middot; <a href="'+dirUrl(c)+'" target="_blank">Directions</a>'));
+  const pts=[[la,lo]].concat(top.map(c=>[c.lat,c.lng]));nearMap.fitBounds(L.latLngBounds(pts).pad(0.2));setTimeout(()=>nearMap.invalidateSize(),50);
+ }catch(e){}
+}
 document.getElementById('nearbtn').onclick=()=>{
- const box=document.getElementById('near');box.style.display='block';box.innerHTML='Getting your location...';
- if(!navigator.geolocation){box.innerHTML='This browser cannot give a location.';return;}
- navigator.geolocation.getCurrentPosition(async p=>{
-  const la=p.coords.latitude,lo=p.coords.longitude;const all=await allClinics();
-  all.forEach(c=>c.d=hav(la,lo,c.lat,c.lng));
-  const over=all.filter(c=>c.typ==='ER'||c.typ==='NIGHT').sort((a,b)=>a.d-b.d).slice(0,4);
-  const any=all.filter(c=>c.typ!=='ER'&&c.typ!=='NIGHT').sort((a,b)=>a.d-b.d).slice(0,3);
-  const row=c=>'<div><b>'+c.name+'</b> <span class="t-'+c.typ+'">'+c.typ+'</span> &middot; '+c.d.toFixed(1)+' mi straight-line &middot; '+(c.phone?'<a href="tel:'+c.phone+'">'+c.phone+'</a>':'no phone listed')+'<br><span style="color:#9aa3b2;font-size:12.5px">'+(c.town||'')+' &middot; '+c.hours+'</span></div>';
-  const hr='<hr style="border:0;border-top:1px solid #2a3140;margin:6px 0">';
-  box.innerHTML=(over.length?'<div style="color:#ffd94d;font-weight:700;margin-bottom:4px">Overnight doors nearest you</div>'+over.map(row).join(hr):'<div>No 24/7 or night clinic known near here. Add a map of your area for better coverage.</div>')
-   +(any.length?'<div style="color:#ffd94d;font-weight:700;margin:10px 0 4px">Nearest daytime clinics</div>'+any.map(row).join(hr):'')
-   +'<div style="color:#9aa3b2;font-size:12px;margin-top:8px">From '+all.length+' clinics: the built-in verified list plus your saved maps. Call before driving - hours change.</div>';
- },()=>{box.innerHTML='Location unavailable - allow location access for this app and try again.'},{enableHighAccuracy:true,timeout:15000,maximumAge:60000});
+ const box=document.getElementById('near');box.innerHTML='<div class="res">Getting your location...</div>';
+ if(!navigator.geolocation){box.innerHTML='<div class="res">This browser cannot give a location.</div>';return;}
+ navigator.geolocation.getCurrentPosition(showNear,()=>{box.innerHTML='<div class="res">Location unavailable - allow location access for this app and try again.</div>'},{enableHighAccuracy:true,timeout:15000,maximumAge:60000});
 };
 </script></body></html>
