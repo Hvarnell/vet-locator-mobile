@@ -14,7 +14,7 @@ A static web app: host this folder and open it on a phone. Everyone's maps are a
 
 ## Clinics near me
 
-One button, three choices: 24/7 ER (default), late night, or any clinic open right now (from each clinic's hours and the phone's clock). Every result has the address, tap-to-call and a Directions button that opens the phone's own maps app. It uses the built-in hand-verified list plus every map saved on the phone, and works without signal.
+One button, three choices: 24/7 ER (default), late night, or any clinic open right now (from each clinic's hours and the phone's clock). Every result has the address, tap-to-call and a Directions button that opens the phone's own maps app. It uses the built-in hand-verified list, every map saved on the phone and `clinics-us.json` (every OpenStreetMap clinic in the US), so it works anywhere and without signal. If the phone cannot give a location, a typed town, ZIP code or address works instead (needs signal).
 
 ## Saving a map
 

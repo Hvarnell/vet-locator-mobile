@@ -1,4 +1,4 @@
-const VERSION='2cb6df3795';const PRECACHE=["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./icon-512-maskable.png", "./leaflet.css", "./leaflet.js", "./leaflet-icons.js", "./mymaps.js", "./privacy.html", "./builtin.json", "./verified.html", "./live.html", "./install.html"];
+const VERSION='06d7566c64';const PRECACHE=["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./icon-512-maskable.png", "./leaflet.css", "./leaflet.js", "./leaflet-icons.js", "./mymaps.js", "./privacy.html", "./builtin.json", "./verified.html", "./clinics-us.json", "./live.html", "./install.html"];
 self.addEventListener('install',e=>{e.waitUntil(caches.open('vet-'+VERSION).then(c=>Promise.allSettled(PRECACHE.map(u=>c.add(u)))).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!=='vet-'+VERSION&&k!=='tiles'&&k!=='mymaps').map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
 async function trim(c){const keys=await c.keys();if(keys.length>2500){for(const k of keys.slice(0,300))await c.delete(k);}}
