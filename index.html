@@ -62,7 +62,8 @@ td .go{display:inline-block;background:#2f6fd6;color:#fff;border-radius:7px;padd
 <script>
 function setNet(){document.body.classList.toggle('offline',!navigator.onLine)}
 window.addEventListener('online',setNet);window.addEventListener('offline',setNet);setNet();
-if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js').then(()=>{document.getElementById('st').insertAdjacentHTML('afterbegin','<b>Saved on this phone.</b> ')}).catch(()=>{});}
+if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'}).then(reg=>{document.getElementById('st').insertAdjacentHTML('afterbegin','<b>Saved on this phone.</b> ');document.addEventListener('visibilitychange',()=>{if(!document.hidden)reg.update().catch(()=>{});});}).catch(()=>{});
+ let hadCtrl=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(hadCtrl&&!window.__reloaded){window.__reloaded=1;location.reload();}hadCtrl=true;});}
 let deferredInstall=null;const ib=document.getElementById('installbtn');
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstall=e;ib.style.display='';});
 ib.onclick=async()=>{if(!deferredInstall)return;ib.disabled=true;deferredInstall.prompt();await deferredInstall.userChoice;deferredInstall=null;ib.style.display='none';};

@@ -156,5 +156,5 @@ let deferredInstall=null;const ib=document.getElementById('installbtn');
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstall=e;if(!standalone&&!inApp)ib.hidden=false;});
 ib.onclick=async()=>{if(!deferredInstall)return;ib.disabled=true;deferredInstall.prompt();const r=await deferredInstall.userChoice;deferredInstall=null;ib.hidden=true;ib.disabled=false;if(r&&r.outcome==='accepted'){document.getElementById('done').hidden=false;}};
 window.addEventListener('appinstalled',()=>{ib.hidden=true;document.getElementById('done').hidden=false;});
-if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js').catch(()=>{});}
+if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'}).catch(()=>{});}
 </script></body></html>

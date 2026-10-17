@@ -1,5 +1,5 @@
-const VERSION='c213d1b63d';const PRECACHE=["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./icon-512-maskable.png", "./leaflet.css", "./leaflet.js", "./leaflet-icons.js", "./mymaps.js", "./privacy.html", "./builtin.json", "./clinics-us.json", "./live.html", "./install.html"];
-self.addEventListener('install',e=>{e.waitUntil(caches.open('vet-'+VERSION).then(c=>Promise.allSettled(PRECACHE.map(u=>c.add(u)))).then(()=>self.skipWaiting()))});
+const VERSION='a24a45345b';const PRECACHE=["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./icon-512-maskable.png", "./leaflet.css", "./leaflet.js", "./leaflet-icons.js", "./mymaps.js", "./privacy.html", "./builtin.json", "./clinics-us.json", "./live.html", "./install.html"];
+self.addEventListener('install',e=>{e.waitUntil(caches.open('vet-'+VERSION).then(c=>Promise.allSettled(PRECACHE.map(u=>c.add(new Request(u,{cache:'reload'}))))).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!=='vet-'+VERSION&&k!=='tiles'&&k!=='mymaps').map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
 async function trim(c){const keys=await c.keys();if(keys.length>2500){for(const k of keys.slice(0,300))await c.delete(k);}}
 self.addEventListener('fetch',e=>{
