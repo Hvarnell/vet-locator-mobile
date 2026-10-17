@@ -41,18 +41,18 @@ td .go{display:inline-block;background:#2f6fd6;color:#fff;border-radius:7px;padd
 </style><link rel="stylesheet" href="./leaflet.css"></head><body>
 <header><img src="./icon-192.png" alt=""><div><h1>MapAVet</h1><div class="sub">Never far from an open door.</div></div></header>
 <main>
-<div class="off">No signal - building a new map needs internet. Clinics near me, the built-in list and your saved maps still work.</div>
+<div class="off">No signal - building a new map needs internet. Clinics near me and your saved maps still work.</div>
 <h2>Veterinary clinics near me</h2>
 <div class="seg" id="mode"><button data-m="er" class="on">24/7 ER</button><button data-m="late">Late night</button><button data-m="open">Open now</button></div>
 <button class="btn" id="nearbtn">&#9673; Find clinics near me</button>
 <div class="where"><input id="place" type="search" enterkeyhint="search" autocomplete="off" placeholder="Town, ZIP or address" aria-label="Town, ZIP code or address"><button id="placebtn">Search</button></div>
 <div id="near"></div>
 <div id="nearmap"></div>
-<h2>Any other area</h2><a class="btn blue" href="./live.html">Build a map of a route or an address</a><div class="note" style="margin-top:-4px">Every clinic along any US drive or around any address, with hours and phone. Needs signal to build; the finished map saves to this phone.</div>
-<h2>Built in</h2><a class="card" href="./verified.html"><b>231 hand-verified clinics</b><span>69 open 24/7 or late. Checked against their listings (Sept 2026): Denver metro, Denver to Michigan (I-80 / I-69) and Denver to Houston (I-25 / US-287 / I-45).</span></a><div class="note" style="margin-top:-2px">Clinics near me also searches 9,250 clinics across the US from OpenStreetMap (Oct 2026), stored on this phone. Many have no hours listed - call first.</div>
+<div class="note">Clinics near me searches 9,250 clinics across the US, stored on this phone (OpenStreetMap, Oct 2026). Many have no hours listed - call first.</div>
+<h2>Any other area</h2><a class="btn blue" href="./live.html">Build a map of a route or an address</a><div class="note" style="margin-top:-4px">Every clinic along any US drive or around any address, with hours and phone. Needs signal to build; the finished map saves to this phone under My maps.</div>
+<div id="mmsec"><h2>My maps</h2><div id="mymaps"></div><div class="note" id="mmempty">No saved maps yet. Build a map of a route or an address and tap <b>Go to map</b> - it is saved here, on this phone, and opens without signal.</div></div>
 <div id="sponsor"></div>
-<div id="mmsec" style="display:none"><h2>My maps</h2><div id="mymaps"></div></div>
-<div class="status" id="st">Works without signal: clinics near me (anywhere in the US), the built-in list and your saved maps. Needs signal: searching a typed place, building a new map, directions, and map pictures the first time you look at an area. <a href="./install.html" id="howto">Put it on your home screen</a> &middot; <a href="./privacy.html">Privacy</a></div>
+<div class="status" id="st">Works without signal: clinics near me (anywhere in the US) and your saved maps. Needs signal: searching a typed place, building a new map, directions, and map pictures the first time you look at an area. <a href="./install.html" id="howto">Put it on your home screen</a> &middot; <a href="./privacy.html">Privacy</a></div>
 <button class="btn grey" id="installbtn" style="display:none">&#11015; Install this app on your phone</button>
 <h2>Add a map file</h2>
 <label class="btn grey small" for="addmap">+ Add a map file</label><input id="addmap" type="file" accept=".html,text/html" style="display:none">
@@ -71,7 +71,7 @@ if(window.matchMedia('(display-mode: standalone)').matches||navigator.standalone
 fetch('./sponsor.json',{cache:'no-store'}).then(r=>r.json()).then(sp=>{if(sp&&sp.enabled&&sp.url){document.getElementById('sponsor').innerHTML='<a class="card" href="'+sp.url+'" target="_blank" rel="noopener sponsored" style="border-color:#3a4356"><b>'+sp.title+'</b><span>'+(sp.text||'')+'</span><span style="display:block;font-size:11px;margin-top:4px;color:#6f7886">Sponsored</span></a>';}}).catch(()=>{});
 function hav(a,b,c,d){const r=Math.PI/180,R=3958.76;const x=Math.sin((c-a)*r/2)**2+Math.cos(a*r)*Math.cos(c*r)*Math.sin((d-b)*r/2)**2;return 2*R*Math.asin(Math.sqrt(x));}
 function renderMine(){const l=mmIdx(),box=document.getElementById('mymaps');box.innerHTML=l.map(m=>'<a class="card" href="./map-'+m.id+'.html"><b>'+m.title+'</b><span>'+m.sub+'</span><button class="rm" data-id="'+m.id+'">remove</button></a>').join('');
- document.getElementById('mmsec').style.display=l.length?'':'none';
+ document.getElementById('mmempty').style.display=l.length?'none':'';
  box.querySelectorAll('.rm').forEach(b=>b.onclick=async e=>{e.preventDefault();await removeMap(b.dataset.id);renderMine();});}
 document.getElementById('addmap').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{await saveMapHtml(await f.text(),f.name);renderMine();window.scrollTo({top:document.getElementById('mmsec').offsetTop-10,behavior:'smooth'});}catch(err){alert('That is not a map saved from the map builder.');}e.target.value='';};
 renderMine();listenForMaps(()=>renderMine());
@@ -98,7 +98,7 @@ let mode='er',nearMap=null,nearLayer=null,lastPos=null,limit=6;
 document.querySelectorAll('#mode button').forEach(b=>b.onclick=()=>{mode=b.dataset.m;limit=6;document.querySelectorAll('#mode button').forEach(x=>x.classList.toggle('on',x===b));if(lastPos)showNear(lastPos);});
 function row(c){const typ=c.typ||'UNK',er=typ==='UNK'&&c.er;const badge=er?'ER? call first':({ER:'24/7 ER',NIGHT:'late night',EXT:'extended hrs',DAY:'daytime',UNK:'hours unknown'}[typ]||typ);
  const hrs=c.hours?esc(c.hours):(typ==='UNK'?'Hours not listed - call first':''),tel=String(c.phone||'').replace(/[^0-9+]/g,'');
- const src={verified:'Hand-verified',saved:'From your saved map',osm:'OpenStreetMap listing'}[c.source]||'';
+ const src='';
  return '<div class="res"><div style="display:flex;justify-content:space-between;gap:10px"><div><b>'+esc(c.name)+'</b><span class="badge '+(er?'ERQ':typ)+'">'+badge+'</span></div><span class="d">'+c.d.toFixed(1)+' mi</span></div>'
  +'<div class="addr">'+esc(c.address||c.town||'')+'</div><div class="hrs">'+hrs+(er&&!/call to confirm/i.test(c.hours||'')?'<br>The name suggests emergency care - call to confirm it is open.':'')+'</div>'
  +'<div class="acts">'+(tel?'<a class="act call" href="tel:'+tel+'">'+ICO_CALL+' Call</a>':'<a class="act" target="_blank" rel="noopener" href="https://www.google.com/search?q='+encodeURIComponent(c.name+' '+(c.address||c.town||'')+' phone')+'">'+ICO_FIND+' Find phone</a>')+'<a class="act go" target="_blank" rel="noopener" href="'+dirUrl(c)+'">'+ICO_GO+' Directions</a></div>'
@@ -116,7 +116,7 @@ async function showNear(p){lastPos=p;const la=p.la,lo=p.lo,box=document.getEleme
   if(pool.length>top.length)h+='<button class="more" id="more">Show more</button>';
   if(top[0].d>60)h+='<div class="res">The nearest one listed is '+Math.round(top[0].d)+' miles away. Public listings miss some clinics and many hours, so call ahead - and with signal, <a href="./live.html" style="color:#8fc1ff">build a map</a> of your area for a fuller search.</div>';}
  else h+='<div class="res">No '+label+' listed within 500 miles'+(nat.length?'':' (the nationwide list has not downloaded yet - open the app once with signal)')+'. Try another option above, or with signal <a href="./live.html" style="color:#8fc1ff">build a map</a> of your area.</div>';
- h+='<div class="note" style="margin-top:6px">Straight-line miles. '+(mode==='open'?'Clinics whose hours are not listed are left out of Open now, except ones whose name says emergency. ':'')+'Always call before driving - hours change.'+(nat.length?' Clinics outside the hand-verified list: &copy; OpenStreetMap contributors'+(NATDATE?' ('+esc(NATDATE)+')':'')+'.':'')+'</div>';
+ h+='<div class="note" style="margin-top:6px">Straight-line miles. '+(mode==='open'?'Clinics whose hours are not listed are left out of Open now, except ones whose name says emergency. ':'')+'Always call before driving - hours change.'+(nat.length?' Listings &copy; OpenStreetMap contributors'+(NATDATE?' ('+esc(NATDATE)+')':'')+'.':'')+'</div>';
  box.innerHTML=h;const mb=document.getElementById('more');if(mb)mb.onclick=()=>{limit+=6;showNear(lastPos);};
  try{const mapEl=document.getElementById('nearmap');mapEl.style.display='block';
   if(!nearMap){nearMap=L.map('nearmap',{zoomControl:false,attributionControl:false});L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',{maxZoom:19}).addTo(nearMap);}

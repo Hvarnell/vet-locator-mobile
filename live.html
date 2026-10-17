@@ -39,12 +39,24 @@ td .go{display:inline-block;background:#2f6fd6;color:#fff;border-radius:7px;padd
 .res .src{color:#6f7886;font-size:11.5px;margin-top:6px}.badge.ERQ{background:#4a2630;color:#ffb3b3}.usedat{color:#9aa3b2;font-size:12.5px;margin:6px 0 0}.usedat b{color:#e8eaee}
 .more{display:block;width:100%;background:none;border:1px solid #3a4356;color:#c9ceda;border-radius:10px;padding:9px;font-size:13.5px;font-weight:600;font-family:inherit;cursor:pointer;margin:4px 0}
 </style>
-<style>html,body{height:100%}body{display:flex;flex-direction:column}iframe{flex:1 1 auto;border:0;width:100%}
-.bar{padding:8px 16px;background:#151a22;border-bottom:1px solid #2a3140;font-size:13px;line-height:1.5}.bar a{color:#8fc1ff;text-decoration:none}.bar .n{color:#9aa3b2}</style></head>
-<body><div class="bar"><a href="./index.html">&larr; Home</a> &nbsp;&middot;&nbsp; <a href="https://vetlocator.streamlit.app" target="_blank">open in browser</a> <span class="n">&nbsp;&middot;&nbsp; If it says the app is asleep, tap <b>Yes, get this app back up</b> and give it 30 seconds.</span></div>
-<div class="off" style="margin:8px 16px">No signal - the builder needs internet. <a href="./index.html" style="color:#ffd94d">Use clinics near me or your saved maps</a>.</div>
-<iframe src="https://vetlocator.streamlit.app?embed=true" allow="geolocation; clipboard-write" title="Map builder"></iframe>
-<script>const APP_ORIGIN="https://vetlocator.streamlit.app";</script><script src="./mymaps.js"></script>
+<style>html,body{height:100%}body{display:flex;flex-direction:column;overflow:hidden}
+.bar{display:flex;justify-content:space-between;align-items:center;padding:7px 14px;background:#151a22;border-bottom:1px solid #2a3140;font-size:14px}.bar a{color:#8fc1ff;text-decoration:none;font-weight:600}
+.wrap{flex:1 1 auto;position:relative;overflow:hidden}.wrap iframe{position:absolute;left:0;top:0;width:100%;height:calc(100% + 44px);border:0}
+.fine{padding:4px 14px;background:#151a22;border-top:1px solid #2a3140;color:#6f7886;font-size:10.5px;line-height:1.3}
+.off{margin:8px 16px}body.offline .wrap{display:none}</style></head>
+<body><div class="bar"><a href="./index.html">&larr; Home</a><a href="./index.html#mmsec">My maps</a></div>
+<div class="off">No signal - the builder needs internet. <a href="./index.html" style="color:#ffd94d">Use clinics near me or your saved maps</a>.</div>
+<div class="wrap"><iframe id="fr" src="https://vetlocator.streamlit.app?embed=true&app=1" allow="geolocation; clipboard-write" title="Map builder"></iframe></div>
+<div class="fine">If it says the app is asleep, tap "Yes, get this app back up" and give it 30 seconds.</div>
+<script>const APP_ORIGIN="https://vetlocator.streamlit.app",APP_URL="https://vetlocator.streamlit.app";</script><script src="./mymaps.js"></script>
 <script>function setNet(){document.body.classList.toggle('offline',!navigator.onLine)}window.addEventListener('online',setNet);window.addEventListener('offline',setNet);setNet();
-listenForMaps((id,m)=>{const t=document.createElement('div');t.className='toast';t.innerHTML='Saved: <b>'+(m?m.title:'map')+'</b> is under My maps on the <a href="./index.html">home page</a>.';document.body.appendChild(t);setTimeout(()=>t.remove(),8000);});</script>
+function toast(h){const t=document.createElement('div');t.className='toast';t.innerHTML=h;document.body.appendChild(t);setTimeout(()=>t.remove(),8000);}
+listenForMaps((id,m,d)=>{const url='./map-'+id+'.html';
+ if(d&&d.open&&navigator.serviceWorker&&navigator.serviceWorker.controller){location.href=url;return;}
+ toast('Saved: <b>'+(m?m.title:'map')+'</b> - <a href="'+url+'">open it</a> (also under My maps on the <a href="./index.html">home page</a>).');});
+window.addEventListener('message',e=>{const d=e.data;if(!d||d.type!=='vetloc')return;if(APP_ORIGIN&&e.origin!==APP_ORIGIN)return;
+ if(!navigator.geolocation){toast('This phone cannot give a location - type the address instead.');return;}
+ navigator.geolocation.getCurrentPosition(p=>{document.getElementById('fr').src=APP_URL+'?embed=true&app=1&ll='+p.coords.latitude.toFixed(5)+','+p.coords.longitude.toFixed(5);},
+  err=>{toast(err&&err.code===1?'Location is turned off for this app - allow it in your phone settings, or type the address instead.':'Could not get your location right now - type the address instead.');},
+  {enableHighAccuracy:false,timeout:12000,maximumAge:600000});});</script>
 </body></html>

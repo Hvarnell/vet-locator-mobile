@@ -10,4 +10,4 @@ async function saveMapHtml(t,fallbackName){
  const l=mmIdx();l.push({id,title:ti,sub:su.replace(/<[^>]+>/g,'').slice(0,120)});mmSave(l);return id;}
 async function removeMap(id){const c=await caches.open('mymaps');await c.delete('./map-'+id+'.html');mmSave(mmIdx().filter(m=>m.id!==id));}
 function listenForMaps(onSaved){window.addEventListener('message',async e=>{const d=e.data;if(!d||d.type!=='vetmap'||typeof d.html!=='string')return;
- if(APP_ORIGIN&&e.origin!==APP_ORIGIN)return;try{const id=await saveMapHtml(d.html,d.name);onSaved&&onSaved(id,mmIdx().slice(-1)[0]);}catch(err){alert('Could not save that map: '+err.message);}});}
+ if(APP_ORIGIN&&e.origin!==APP_ORIGIN)return;try{const id=await saveMapHtml(d.html,d.name);onSaved&&onSaved(id,mmIdx().slice(-1)[0],d);}catch(err){alert('Could not save that map: '+err.message);}});}
